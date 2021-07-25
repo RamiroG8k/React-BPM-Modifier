@@ -13,12 +13,12 @@ const App = () => {
 
     useEffect(() => {
         sessionStorage.setItem('token', token);
-        
+
         const fetchTrack = async () => {
             await apiInstance.get(`/tracks/${id}`)
                 .then((response) => {
                     console.log(response);
-                }).catch ((error) => {
+                }).catch((error) => {
                     console.log(error);
                 });
         };
@@ -27,7 +27,7 @@ const App = () => {
             await apiInstance.get(`/audio-features/${id}`)
                 .then((response) => {
                     console.log(response);
-                }).catch ((error) => {
+                }).catch((error) => {
                     console.log(error);
                 });
         };
@@ -38,7 +38,7 @@ const App = () => {
 
 
     return (
-        <main className="flex flex-col h-screen w-screen bg-gray-200">
+        <main className="flex h-screen w-screen bg-gray-200">
             <section className="flex flex-col w-full sm:w-1/4 h-1/4 m-5 sm:mx-auto bg-white rounded-4xl">
                 <div className="text-center leading-5 mt-4 text-xl">
                     <h2 className="font-medium">Ahora reproduciendo</h2>
@@ -53,12 +53,11 @@ const App = () => {
                         <p className="text-3xl font-semibold text-gray-400">90.7%</p>
                     </div>
                 </div>
-            </section>
+                <div className="mt-10 bg-green-200">
+                    <h1 className="text-xl font-bold uppercase">token: {token}</h1>
 
-            <section className="">
-                <h1 className="text-xl font-bold uppercase">token: {token}</h1>
-                
-                <h1 className="text-xl font-bold uppercase">id: {id}</h1>
+                    <h1 className="text-xl font-bold uppercase">id: {id}</h1>
+                </div>
             </section>
         </main>
     );
