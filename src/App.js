@@ -1,11 +1,41 @@
+// Common
+import { useEffect, useState } from 'react';
+// Others
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
+import { apiInstance } from './services';
 
 const App = () => {
     const { search } = useLocation();
     const { token, id } = queryString.parse(search);
 
-    console.log(token, id);
+    const [track, setTrack] = useState({});
+
+    useEffect(() => {
+        sessionStorage.setItem('token', token);
+        
+        const fetchTrack = async () => {
+            await apiInstance.get(`/tracks/${id}`)
+                .then((response) => {
+                    console.log(response);
+                }).catch ((error) => {
+                    console.log(error);
+                });
+        };
+
+        const fetchFeatures = async () => {
+            await apiInstance.get(`/audio-features/${id}`)
+                .then((response) => {
+                    console.log(response);
+                }).catch ((error) => {
+                    console.log(error);
+                });
+        };
+
+        fetchTrack();
+        fetchFeatures();
+    }, [token, id]);
+
 
     return (
         <main className="flex h-screen w-screen bg-gray-200">
