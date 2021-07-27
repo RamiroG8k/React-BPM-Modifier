@@ -144,4 +144,6 @@ export function getIntervals(peaks) {
     return groups;
 }
 
-export const formatSeconds = (s) => { return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + ~~(s) }
+export const formatSeconds = (s) => { return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + ~~(s) };
+
+export const classNames = (...classes) => classes.filter(Boolean).join(' ');
