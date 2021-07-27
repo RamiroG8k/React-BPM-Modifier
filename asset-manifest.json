@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/React-BPM-Modifier/static/css/main.8f838c6b.chunk.css",
+    "main.js": "/React-BPM-Modifier/static/js/main.1ae88526.chunk.js",
+    "main.js.map": "/React-BPM-Modifier/static/js/main.1ae88526.chunk.js.map",
+    "runtime-main.js": "/React-BPM-Modifier/static/js/runtime-main.842b10ca.js",
+    "runtime-main.js.map": "/React-BPM-Modifier/static/js/runtime-main.842b10ca.js.map",
+    "static/css/2.437dbca3.chunk.css": "/React-BPM-Modifier/static/css/2.437dbca3.chunk.css",
+    "static/js/2.a826d741.chunk.js": "/React-BPM-Modifier/static/js/2.a826d741.chunk.js",
+    "static/js/2.a826d741.chunk.js.map": "/React-BPM-Modifier/static/js/2.a826d741.chunk.js.map",
+    "index.html": "/React-BPM-Modifier/index.html",
+    "static/css/2.437dbca3.chunk.css.map": "/React-BPM-Modifier/static/css/2.437dbca3.chunk.css.map",
+    "static/css/main.8f838c6b.chunk.css.map": "/React-BPM-Modifier/static/css/main.8f838c6b.chunk.css.map",
+    "static/js/2.a826d741.chunk.js.LICENSE.txt": "/React-BPM-Modifier/static/js/2.a826d741.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.842b10ca.js",
+    "static/css/2.437dbca3.chunk.css",
+    "static/js/2.a826d741.chunk.js",
+    "static/css/main.8f838c6b.chunk.css",
+    "static/js/main.1ae88526.chunk.js"
+  ]
+}
