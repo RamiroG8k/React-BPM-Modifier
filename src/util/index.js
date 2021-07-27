@@ -1,10 +1,10 @@
-export const getOfflineBPM = (file) => {
+export const getOfflineBPM = (file, callback) => {
     const reader = new FileReader();
     // Create offline context
     const OfflineContext = window.OfflineAudioContext || window.webkitOfflineAudioContext;
     const context = new OfflineContext(2, 30 * 44100, 44100);
     
-    reader.onload = async () => {
+    reader.onload = () => {
         context.decodeAudioData(reader.result, (buffer) => {
             // Create buffer source
             let source = context.createBufferSource();
@@ -15,7 +15,7 @@ export const getOfflineBPM = (file) => {
 
             // First a lowpass to remove most of the song.
             let lowpass = context.createBiquadFilter();
-            lowpass.type = "lowpass";
+            lowpass.type = 'lowpass';
             lowpass.frequency.value = 150;
             lowpass.Q.value = 1;
 
@@ -24,7 +24,7 @@ export const getOfflineBPM = (file) => {
 
             // Now a highpass to remove the bassline.
             let highpass = context.createBiquadFilter();
-            highpass.type = "highpass";
+            highpass.type = 'highpass';
             highpass.frequency.value = 100;
             highpass.Q.value = 1;
 
@@ -43,42 +43,17 @@ export const getOfflineBPM = (file) => {
             const buffer = e.renderedBuffer;
             const peaks = getPeaks([buffer.getChannelData(0), buffer.getChannelData(1)]);
             let groups = getIntervals(peaks);
-
-            const top = groups.sort((intA, intB) => {
+            
+            const inferences = groups.sort((intA, intB) => {
                 return intB.count - intA.count;
             }).splice(0, 5);
-            
-            console.log(top);
+
+            callback(inferences);            
         };
     };
-    
+
     reader.readAsArrayBuffer(file);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 export function getPeaks(data) {
 
@@ -168,3 +143,5 @@ export function getIntervals(peaks) {
     });
     return groups;
 }
+
+export const formatSeconds = (s) => { return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + ~~(s) }
