@@ -82,8 +82,23 @@ const App = () => {
     };
 
     return (
-        <main className="h-screen w-screen bg-gray-200">
-            <div className="flex">
+        <main className="h-screen w-screen bg-gray-100 p-5">
+            <section className="flex justify-between">
+                <div className="left">
+                    <p className="text-2xl font-bold text-gray-700">BPM</p>
+                    <p className="text-xl font-semibold text-gray-400">{`${rate}%`}</p>
+                </div>
+                <div className="right">
+                    <p className="font-bold text-6xl text-red-400">{bpm}</p>
+                </div>
+            </section>
+
+            <section>
+                <div className="rounded-sm w-2/3">
+                    IMG
+                </div>
+            </section>
+            {/* <div className="flex">
                 <section className="flex flex-col w-full sm:w-1/4 h-1/4 m-5 sm:mx-auto bg-white rounded-4xl">
                     <div className="text-center leading-5 mt-4 text-xl">
                         <h2 className="font-medium">Ahora reproduciendo</h2>
@@ -99,7 +114,7 @@ const App = () => {
                         </div>
                     </div>
                 </section>
-            </div>
+            </div> */}
             {Object.keys(track).length === 0 &&
                 <div className="flex items-center justify-center">
                     <label className="flex flex-col items-center p-4 bg-white text-blue rounded-3xl shadow-lg tracking-wide uppercase border border-blue cursor-pointer">
