@@ -1,16 +1,15 @@
 // Common
 import { useEffect, useState, useRef } from 'react';
 // Others
-import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
+import { useParams } from 'react-router-dom';
 import { apiInstance } from './services';
 import Slider from './components/Slider';
 import { getOfflineBPM, formatSeconds, classNames } from './util';
 import { CgInfinity, CgMusic, CgPlayButtonO, CgPlayPauseO } from 'react-icons/cg'
 
 const App = () => {
-    const { search } = useLocation();
-    const { token, id } = queryString.parse(search);
+    const { token, id } = useParams();
+    
     const [track, setTrack] = useState({});
     const [isPlaying, setIsPlaying] = useState(false);
     const [rate, setRate] = useState(100);
@@ -18,7 +17,7 @@ const App = () => {
     const [duration, setDuration] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
     const [loop, setLoop] = useState(false);
-    const [master, setMaster] = useState(false);
+    const [master, setMaster] = useState(true);
     const [half, setHalf] = useState(false);
 
     const audioRef = useRef();
@@ -63,7 +62,7 @@ const App = () => {
 
     const handleRate = (value) => {
         setRate(value);
-        setBpm(Math.round((value / 100) * track.tempo));
+        setBpm(Math.round((value / 100) * (half ? (track.tempo / 2) : track.tempo )));
 
         const audio = audioRef.current;
         audio.playbackRate = value / 100;
@@ -107,7 +106,6 @@ const App = () => {
 
     const toggleHalf = () => {
         setHalf(!half);
-
         half ? setBpm(bpm * 2) : setBpm(bpm / 2);
     };
 
@@ -136,7 +134,7 @@ const App = () => {
             </div>
 
             {Object.keys(track).length > 0 &&
-                <div className="flex flex-col h-1/2 w-full justify-between">
+                <div className="flex flex-col h-1/2 w-full justify-between dark:text-gray-100">
 
                     <section className="flex w-full">
                         <div className="flex flex-col p-1 w-1/5 justify-between gap-2">
@@ -155,11 +153,11 @@ const App = () => {
 
                         <div className="flex flex-col h-full w-4/5 p-2">
                             <div className="h-1/2">
-                                <h2 className="text-xl font-bold">{track?.name ?? 'Name placeholder etc...'}</h2>
+                                <h2 className={`${track.name.length > 25 ? 'text-xs' : 'text-xl'} font-bold`}>{track?.name ?? 'Name placeholder etc...'}</h2>
                             </div>
                             <div className="flex h-1/2 items-center">
                                 <div className="w-4/5 h-full py-2">
-                                    <h3 className="text-sm font-semibold text-gray-600">{track?.artists ?? 'Artist 1, Artist 2... etc.'}</h3>
+                                    <h3 className={`${track.artists.length > 25 ? 'text-xs' : 'text-sm'} font-semibold text-gray-600`}>{track?.artists ?? 'Artist 1, Artist 2... etc.'}</h3>
                                 </div>
                                 <div className="w-1/5">
                                     <button onClick={() => toggleHalf()} className={classNames(half ? 'bg-red-300 text-white' : 'bg-white text-gray-700',
