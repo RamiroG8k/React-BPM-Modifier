@@ -2,14 +2,17 @@
 import { useEffect, useState, useRef } from 'react';
 // Others
 import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
 import { apiInstance } from './services';
 import Slider from './components/Slider';
 import { getOfflineBPM, formatSeconds, classNames } from './util';
-import { CgInfinity, CgMusic, CgPlayButtonO, CgPlayPauseO } from 'react-icons/cg'
+import { CgInfinity, CgMusic, CgPlayButtonO, CgPlayPauseO, CgRedo } from 'react-icons/cg'
 
 const App = () => {
-    const { token, id } = useParams();
-    
+    const { search } = useLocation();
+    const { token, id } = queryString.parse(search);
+
     const [track, setTrack] = useState({});
     const [isPlaying, setIsPlaying] = useState(false);
     const [rate, setRate] = useState(100);
@@ -32,7 +35,7 @@ const App = () => {
     const fetchTrack = async () => {
         await apiInstance.get(`/tracks/${id}`)
             .then(({ data: response }) => {
-                // setTrack(response);
+                console.log(response);
                 fetchFeatures(response);
             }).catch(console.log);
     };
@@ -62,7 +65,7 @@ const App = () => {
 
     const handleRate = (value) => {
         setRate(value);
-        setBpm(Math.round((value / 100) * (half ? (track.tempo / 2) : track.tempo )));
+        setBpm(Math.round((value / 100) * (half ? (track.tempo / 2) : track.tempo)));
 
         const audio = audioRef.current;
         audio.playbackRate = value / 100;
@@ -109,6 +112,18 @@ const App = () => {
         half ? setBpm(bpm * 2) : setBpm(bpm / 2);
     };
 
+    const reset = () => {
+        setTrack({});
+        setIsPlaying(false);
+        setRate(100);
+        setBpm(0);
+        setDuration(0);
+        setCurrentTime(0);
+        setLoop(false);
+        setMaster(true);
+        setHalf(false);
+    };
+
     return (
         <main className="flex flex-col h-screen items-center bg-gray-100 p-5">
 
@@ -118,7 +133,12 @@ const App = () => {
                         <p className="text-2xl font-bold text-gray-700">BPM</p>
                         <p className="text-xl font-semibold text-gray-400">{`${rate}%`}</p>
                     </div>
-                    <div className="right">
+                    <div className="right flex">
+                        <button onClick={() => reset()}>
+                            <p className="text-3xl p-2">
+                                <CgRedo />
+                            </p>
+                        </button>
                         <p className="font-bold text-6xl text-red-400">{bpm}</p>
                     </div>
                 </section>
@@ -144,7 +164,7 @@ const App = () => {
                                 <p className="text-sm">Loop</p>
                             </button>
 
-                            <button onClick={() => toggleMaster()} className={classNames(master ? 'bg-red-300 text-white' : 'bg-white text-gray-700',
+                            <button onClick={() => toggleMaster()} className={classNames(!master ? 'bg-red-300 text-white' : 'bg-white text-gray-700',
                                 'flex flex-col h-full rounded-xl justify-center items-center transition delay-100')} >
                                 <p className="text-2xl"><CgMusic /></p>
                                 <p className="text-xs leading-3">Master tempo</p>
