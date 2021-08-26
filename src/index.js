@@ -11,7 +11,6 @@ ReactDOM.render(
             <Switch>
                 <Route path="/" component={App} />
                 <Redirect path="/**" to="/" />
-                {/* <App /> */}
             </Switch>
         </BrowserRouter>
     </React.StrictMode>,
