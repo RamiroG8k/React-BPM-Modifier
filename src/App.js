@@ -22,13 +22,12 @@ const initMedia = {
 const App = () => {
     const { search } = useLocation();
     const { token, id } = queryString.parse(search);
-
     const [track, setTrack] = useState({});
     const [media, setMedia] = useState({ ...initMedia, bpm: track?.tempo });
     const audioRef = useRef();
-
-    const html = document.getElementsByTagName('html')[0];    
-
+    
+    const html = document.getElementsByTagName('html')[0];
+    
     useEffect(() => {
         if (token && id) {
             sessionStorage.setItem('token', token);
@@ -51,7 +50,7 @@ const App = () => {
 
     const fetchFeatures = async (info) => {
         await apiInstance.get(`/audio-features/${id}`)
-            .then(({ data: { audio_features: technicisms } }) => {
+            .then(({ data }) => {
                 setTrack({
                     name: info.name,
                     artists: info.artists.map((a) => a.name).join(', '),
@@ -61,7 +60,7 @@ const App = () => {
                     preview: info.preview_url,
                     album: info.album.name,
                     img: info.album.images[1].url,
-                    tempo: technicisms.tempo
+                    tempo: data.tempo
                 });
             }).catch(console.log);
     };
@@ -90,14 +89,15 @@ const App = () => {
     };
 
     const bpmHandler = () => {
-        const withRate = media.bpm * (media.rate / 100)
+        // return track.tempo;
+        const withRate = track.tempo * (media.rate / 100)
         const inHalf = media.half ? withRate / 2 : withRate;
         return Math.round(inHalf);
     }
 
     const fileHandler = ({ target }) => {
         const file = target.files[0];
-
+        
         getOfflineBPM(file, (bpms) => {
             setTrack({
                 name: file.name,
@@ -215,8 +215,7 @@ const App = () => {
                 <div className="flex items-center justify-center">
                     <label className="flex flex-col items-center p-4 bg-gray-200 rounded-2xl tracking-wide uppercase cursor-pointer">
                         <span className="text-base leading-normal">Archivo</span>
-                        <input
-                            type="file" className="hidden" accept="audio/*" onChange={fileHandler} />
+                        <input type="file" className="hidden" accept="audio/*" onChange={fileHandler} />
                     </label>
                 </div>}
 
