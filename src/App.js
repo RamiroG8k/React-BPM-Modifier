@@ -116,7 +116,7 @@ const App = () => {
     };
 
     return (
-        <main className="flex flex-col h-screen items-center bg-gray-100 dark:bg-gray-900 p-5 pt-12">
+        <main className="flex flex-col h-screen items-center bg-gray-50 dark:bg-gray-900 p-5 pt-12">
             <div className="flex flex-col w-full items-center">
                 <section className="flex w-full sm:w-1/2 justify-between">
                     <div className="left">
@@ -167,7 +167,11 @@ const App = () => {
                                 <div className="w-4/5 h-full py-2">
                                     <h3 className={`${track.artists.length > 20 ? 'text-xs' : 'text-sm'} font-semibold text-gray-600`}>{track?.artists ?? 'Artist 1, Artist 2... etc.'}</h3>
                                 </div>
-                                <div className="w-1/5">
+                                <div className="flex flex-col p-1 w-1/5 justify-between gap-2">
+                                    <button onClick={() => mediaHandler({ half: !media.half })} className={classNames(media.half ? 'bg-red-300 text-white' : 'bg-white text-gray-700',
+                                        'flex w-full h-auto rounded-xl p-2 justify-center items-center')}>
+                                        <p className="text-3xl font-semibold">½</p>
+                                    </button>
                                     <button onClick={() => mediaHandler({ half: !media.half })} className={classNames(media.half ? 'bg-red-300 text-white' : 'bg-white text-gray-700',
                                         'flex w-full h-auto rounded-xl p-2 justify-center items-center')}>
                                         <p className="text-3xl font-semibold">½</p>
