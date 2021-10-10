@@ -1,10 +1,11 @@
 // Common
 import { useEffect, useState, useRef } from 'react';
-// Others
 import { useLocation } from 'react-router-dom';
+// Components
+import Slider from './components/Slider';
+// Others
 import queryString from 'query-string';
 import { apiInstance } from './services';
-import Slider from './components/Slider';
 import { getOfflineBPM, formatSeconds, classNames } from './util';
 import { CgInfinity, CgMusic, CgPlayButtonO, CgPlayPauseO, CgRedo } from 'react-icons/cg'
 
@@ -17,7 +18,7 @@ const initMedia = {
     loop: false,
     pitch: false,
     rate: 100,
-    steps: 50
+    steps: 8
 };
 
 const App = () => {
@@ -26,6 +27,7 @@ const App = () => {
     const [track, setTrack] = useState({});
     const [media, setMedia] = useState({ ...initMedia, bpm: track?.tempo });
     const [steps, setSteps] = useState([8, 16, 50]);
+
     const audioRef = useRef();
 
     const html = document.getElementsByTagName('html')[0];
@@ -33,7 +35,7 @@ const App = () => {
     useEffect(() => {
         if (token && id) {
             sessionStorage.setItem('token', token);
-            fetchTrack();
+            fetchTrack(id);
         }
 
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -43,7 +45,7 @@ const App = () => {
         }
     }, [token, id]);
 
-    const fetchTrack = async () => {
+    const fetchTrack = async (id) => {
         await apiInstance.get(`/tracks/${id}`)
             .then(({ data: response }) => {
                 fetchFeatures(response);
@@ -91,7 +93,6 @@ const App = () => {
     };
 
     const bpmHandler = () => {
-        // return track.tempo;
         const withRate = track.tempo * (media.rate / 100)
         const inHalf = media.half ? withRate / 2 : withRate;
         return Math.round(inHalf);
@@ -118,10 +119,11 @@ const App = () => {
     };
 
     const stepsHandler = () => {
-        steps.unshift(steps[2]);
-        steps.pop();
-        setSteps([...steps]);
-        setMedia({ ...initMedia, steps: steps[2], rate: 100 });
+        const aux = steps.splice(1);
+        aux.push(steps[steps.length-1]);
+
+        setSteps(aux);
+        mediaHandler({ steps: aux[0] });
     };
 
     return (
@@ -226,8 +228,8 @@ const App = () => {
 
             {Object.keys(track).length === 0 &&
                 <div className="flex items-center justify-center">
-                    <label className="flex flex-col items-center p-4 bg-gray-200 rounded-2xl tracking-wide uppercase cursor-pointer">
-                        <span className="text-base leading-normal">Archivo</span>
+                    <label className="flex flex-col items-center p-4 bg-gray-200 dark:bg-gray-700 rounded-2xl tracking-wide uppercase cursor-pointer">
+                        <span className="text-base leading-normal dark:text-white">Archivo</span>
                         <input type="file" className="hidden" accept="audio/*" onChange={fileHandler} />
                     </label>
                 </div>}
