@@ -116,7 +116,7 @@ const App = () => {
     };
 
     return (
-        <main className="flex flex-col h-screen items-center bg-gray-100 dark:bg-gray-900 p-5 pt-12">
+        <main className="flex flex-col h-screen items-center bg-gray-100 dark:bg-black p-5 pt-12">
             <div className="flex flex-col w-full items-center">
                 <section className="flex w-full sm:w-1/2 justify-between">
                     <div className="left">
