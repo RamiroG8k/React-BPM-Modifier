@@ -17,6 +17,7 @@ const initMedia = {
     loop: false,
     pitch: false,
     rate: 100,
+    steps: 50
 };
 
 const App = () => {
@@ -24,10 +25,11 @@ const App = () => {
     const { token, id } = queryString.parse(search);
     const [track, setTrack] = useState({});
     const [media, setMedia] = useState({ ...initMedia, bpm: track?.tempo });
+    const [steps, setSteps] = useState([8, 16, 50]);
     const audioRef = useRef();
-    
+
     const html = document.getElementsByTagName('html')[0];
-    
+
     useEffect(() => {
         if (token && id) {
             sessionStorage.setItem('token', token);
@@ -97,7 +99,7 @@ const App = () => {
 
     const fileHandler = ({ target }) => {
         const file = target.files[0];
-        
+
         getOfflineBPM(file, (bpms) => {
             setTrack({
                 name: file.name,
@@ -113,6 +115,13 @@ const App = () => {
         setTrack({});
         setMedia({ ...initMedia, bpm: 0 });
         audioRef.current.pause();
+    };
+
+    const stepsHandler = () => {
+        steps.unshift(steps[2]);
+        steps.pop();
+        setSteps([...steps]);
+        setMedia({ ...initMedia, steps: steps[2], rate: 100 });
     };
 
     return (
@@ -159,7 +168,7 @@ const App = () => {
                             </button>
                         </div>
 
-                        <div className="flex flex-col h-full w-4/5 p-2">
+                        <div className="flex flex-col h-full w-3/5 p-2">
                             <div className="h-1/2">
                                 <h2 className={`${track.name.length > 20 ? 'text-xs' : 'text-xl'} font-bold`}>{track?.name ?? 'Name placeholder etc...'}</h2>
                             </div>
@@ -167,21 +176,25 @@ const App = () => {
                                 <div className="w-4/5 h-full py-2">
                                     <h3 className={`${track.artists.length > 20 ? 'text-xs' : 'text-sm'} font-semibold text-gray-600`}>{track?.artists ?? 'Artist 1, Artist 2... etc.'}</h3>
                                 </div>
-                                <div className="w-1/5">
-                                    <button onClick={() => mediaHandler({ half: !media.half })} className={classNames(media.half ? 'bg-red-300 text-white' : 'bg-white text-gray-700',
-                                        'flex w-full h-auto rounded-xl p-2 justify-center items-center')}>
-                                        <p className="text-3xl font-semibold">½</p>
-                                    </button>
-                                </div>
                             </div>
+                        </div>
+
+                        <div className="flex flex-col p-1 w-1/5 justify-between gap-2">
+                            <button onClick={() => mediaHandler({ half: !media.half })} className={classNames(media.half ? 'bg-red-300 text-white' : 'bg-white text-gray-700',
+                                'flex w-full h-auto rounded-xl p-2 justify-center items-center')}>
+                                <p className="text-3xl font-semibold">½</p>
+                            </button>
+                            <button onClick={() => stepsHandler()} className="bg-white text-gray-700 flex w-full h-auto rounded-xl p-2 justify-center items-center">
+                                <p className="text-3xl font-semibold">±{media.steps}</p>
+                            </button>
                         </div>
                     </section>
 
                     <section className="w-full py-5 px-2">
-                        <Slider onChange={(rate) => mediaHandler({ rate })} />
+                        <Slider onChange={(rate) => mediaHandler({ rate })} steps={media.steps} />
                         <div className="flex justify-between">
-                            <p className="text-sm font-thin">- 50%</p>
-                            <p className="text-sm font-thin">+ 50%</p>
+                            <p className="text-sm font-thin">- {media.steps}%</p>
+                            <p className="text-sm font-thin">+ {media.steps}%</p>
                         </div>
                     </section>
 
