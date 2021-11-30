@@ -118,6 +118,11 @@ const App = () => {
         audioRef.current.pause();
     };
 
+    const loopHandler = () => {
+        audioRef.current.loop = !media.loop;
+        mediaHandler({ loop: (!media.loop) });
+    };
+
     const stepsHandler = () => {
         const aux = steps.splice(1);
         aux.push(steps[steps.length-1]);
@@ -157,7 +162,7 @@ const App = () => {
 
                     <section className="flex w-full">
                         <div className="flex flex-col p-1 w-1/5 justify-between gap-2">
-                            <button onClick={() => mediaHandler({ loop: (!media.loop) })} className={classNames(media.loop ? 'bg-red-300 text-white' : 'bg-white text-gray-700',
+                            <button onClick={() => loopHandler()} className={classNames(media.loop ? 'bg-red-300 text-white' : 'bg-white text-gray-700',
                                 'flex flex-col h-full rounded-xl justify-center items-center transition delay-100')}>
                                 <p className="text-3xl"><CgInfinity /></p>
                                 <p className="text-sm">Loop</p>
